@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Pentest - Juice Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Relatório de Pentest - Juice Shop</h1>
+        <p><strong>Nome do Alvo:</strong> Juice Shop - 192.168.15.120</p>
+        <p><strong>Analista:</strong> Felipe Nunes</p>
+        <p><strong>Data:</strong> 24/08/2025</p>
+    </header>
+
+    <hr>
+
+    <div class="section">
+        <h2>1. Reconhecimento do Alvo</h2>
+        <h3>1.1. Verificação de Acessibilidade (Ping)</h3>
+        <p>O teste de ping confirmou que o alvo estava online e acessível na rede, respondendo ao IP 192.168.15.120.</p>
+        <p><strong>Evidência:</strong></p>
+        <img src="Juice_ping.png" alt="Evidência do Ping">
+
+        <h3>1.2. Mapeamento de Portas (Nmap)</h3>
+        <p>O escaneamento de portas com o Nmap identificou as portas 3000 e 5000 como abertas, indicando serviços web em execução.</p>
+        <p><strong>Evidência:</strong></p>
+        <img src="Juice_portas.png" alt="Evidência do Nmap">
+    </div>
+
+    <div class="section">
+        <h2>2. Análise de Vulnerabilidades</h2>
+        <h3>2.1. Enumeração de Diretórios (Gobuster)</h3>
+        <p>A ferramenta Gobuster foi usada para descobrir diretórios e encontrou os caminhos /console e /ui, que podem conter painéis administrativos ou informações sensíveis.</p>
+        <p><strong>Evidência:</strong></p>
+        <img src="Juice_gobuster.png" alt="Evidência do Gobuster">
+        
+        <h3>2.2. Varredura de Vulnerabilidades (Nikto)</h3>
+        <p>O Nikto encontrou a ausência de cabeçalhos de segurança (X-Frame-Options e X-Content-Type-Options), o que torna a aplicação vulnerável a ataques como "clickjacking".</p>
+        <p><strong>Evidência:</strong></p>
+        <img src="Juice_nikto.png" alt="Evidência do Nikto">
+    </div>
+
+    <div class="section">
+        <h2>3. Exploração</h2>
+        <h3>3.1. Exposição de Informações de Usuários na API (VAMPI)</h3>
+        <p>Ao interagir com a API da aplicação, foi descoberto um endpoint que expõe informações de usuários. Embora a imagem mostre um e-mail básico, essa falha pode vazar dados de todos os usuários, facilitando ataques de phishing ou força bruta.</p>
+        <p><strong>Evidência:</strong></p>
+        <img src="Juice_evidência.png" alt="Evidência de Exposição de Usuários">
+
+        <h3>3.2. Exposição de Usuário "admin" na API (VAMPI)</h3>
+        <p>Outro endpoint da API, que lista livros, expõe o nome de usuário "admin" associado a um dos itens. Isso confirma a existência de uma conta de administrador e pode ser usado para ataques direcionados.</p>
+        <p><strong>Evidência:</strong></p>
+        <img src="admin1.png" alt="Evidência de Exposição do Admin">
+
+        <h3>3.3. Exposição de Credenciais (VAMPI)</h3>
+        <p>Em um dos endpoints de "debug" da API, a senha de um usuário foi exposta em texto claro. Esta é uma vulnerabilidade crítica que permite o acesso direto às contas comprometidas.</p>
+        <p><strong>Evidência:</strong></p>
+        <img src="imagem_da_senha_exposta.png" alt="Evidência de Senha Exposta">
+    </div>
+
+    <div class="section">
+        <h2>4. Conclusão</h2>
+        <p>A aplicação Juice Shop, como esperado para um ambiente de teste, apresenta diversas vulnerabilidades de segurança. As falhas encontradas, desde a falta de cabeçalhos de segurança até a exposição de dados sensíveis e senhas em texto claro na API, representam um risco significativo se estivessem em um ambiente de produção real. Recomenda-se a correção imediata de todas as falhas para mitigar o risco de comprometimento.</p>
+    </div>
+
+</div>
+
+</body>
+</html>
